@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Deedle;
 using System.Data;
+using Spectre.Console;
+using Table = Spectre.Console.Table;
 
 namespace KokiBooks.Services.DataAccess
 {
@@ -24,11 +26,19 @@ namespace KokiBooks.Services.DataAccess
                     Estado = l.emprestado == false ? "Disponível" : "Emprestado"
                 });
 
-                // Transforma os resultados em um Frame do Deedle
-                var frame = Frame.FromRecords(query);
+                var table = new Table();
+                var grid = new Grid();
 
-                // Imprime todos os resultados encontrados
-                frame.Print();
+                table.AddColumns("ID", "Nome", "Autor", "Editora", "Estado");
+
+                foreach (var livro in query) {
+                    table.AddRow(livro.Id.ToString(), livro.Nome, livro.Autor, livro.Editora, livro.Estado);
+                    
+                }
+
+                table.Border(TableBorder.Rounded);
+                table.Centered();
+                AnsiConsole.Write(table);
 
             }
         }

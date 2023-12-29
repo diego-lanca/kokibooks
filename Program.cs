@@ -1,8 +1,8 @@
 ﻿using KokiBooks.Services.DataAccess;
+using Spectre.Console;
 
 // // See https://aka.ms/new-console-template for more information
 Console.Clear();
-Console.WriteLine("Inicializando serviço...");
 var books = new BookRepository();
 
 // books.selectAllBooks();
@@ -12,22 +12,27 @@ var books = new BookRepository();
 bool menu = true;
 
 while (menu) {
-    Console.WriteLine("Seja bem-vindo a KokiBooks!\nSelecione a opção que deseja: ");
-    Console.WriteLine("(1) - Verificar livros\n(2) - Empréstimo de Livro\n(3) - Devolução de Livro\n(4) - Sair");
-    var resposta = Console.ReadLine();
+    AnsiConsole.MarkupLine("[underline red]Seja bem-vindo a KokiBooks![/]");
 
-    Console.Clear();
+    var resposta = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+        .Title("Selecione a opção desejada")
+        .PageSize(4)
+        .AddChoices(new [] {
+            "Verificar livros", "Empréstimo de Livro", "Devolução de Livro", "Sair"
+        }));
+
     switch (resposta) {
-        case "1":
+        case "Verificar livros":
             books.selectAllBooks();
             break;
-        case "2":
+        case "Empréstimo de Livro":
             books.lendBook();
             break;
-        case "3":
+        case "Devolução de Livro":
             books.borrowBook();
             break;
-        case "4":
+        case "Sair":
             menu = false;
             break;
         default:
